@@ -8,7 +8,12 @@ export function cipherString(text) {
 }
 
 export function decipherString(text) {
-  return cryptr.decrypt(text)
+  try {
+    return cryptr.decrypt(text)
+  }
+  catch(err){
+    return null
+  }
 }
 
 export function getDateString() {

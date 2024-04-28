@@ -7,8 +7,10 @@ const sessionsSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   name: String,
+  picture: String,
   username: String,
   email: String,
+  googleId: String,
   password: String,
   tier: {
     type: String,

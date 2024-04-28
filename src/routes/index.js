@@ -11,7 +11,9 @@ router.post('/register',
   isLoggedIn,
   verifyRegisterPayload, 
   async (req, res) => {
+    
     const user = await User.findOne({ email: req.body.email })
+
     if(!user){
       const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
@@ -62,6 +64,12 @@ router.post('/login',
   }
 );
 
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile','email']}))
+
+router.get('/auth/google/callback', passport.authenticate('google'), async (req,res) => {
+  res.send("LoggedIn")
+})
+
 router.get('/', (req,res) => {
   res.send("Auth API for Dropt");
 })
@@ -71,7 +79,11 @@ export default router;
 function verifyRegisterPayload(req,res,next) {
   const payload  = req.body;
   
-  if(!payload.email){
+  if(req.query.user && !decipherString(req.query.user)){
+    res.status(400)
+    res.send('[400] Bad Request: Please provide valid user query params.')
+  }
+  else if(!payload.email){
     res.status(400)
     res.send('[400] Bad Request: Please provide a valid email.')
   }
